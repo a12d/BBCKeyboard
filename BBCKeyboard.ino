@@ -2,6 +2,10 @@
 //#define DEBUG
 
 #include "BBCKeyboard.h"
+#if ARDUINO >= 10606
+#include <Keyboard.h>
+#define HID_SendReport(id,data,len) HID().SendReport(id,data,len)
+#endif
 
 // Output types
 #define OT_SERIAL 1
@@ -21,31 +25,35 @@
 #endif
 
 // BBC connector pinout and arduino equivalent
+// First row is the original pins if using an Arduino micro.
+// Second row is if using an Arduino micro pro.
 // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
 // | 0v |RST |1mhz|KBEN|PA4 |PA5 |PA6 |PA0 |PA1 |PA2 |PA3 |PA7 |LED3|CA2 | 5v |LED1|LED2|
 // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
 // |GND |D2  |D3  |D4  |D5  |D6  |D7  |D8  |D9  |D10 |D11 |D11 |A0  |D13 | 5V |A2  |A1  |
 // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
-
+// |GND |D2  |D3  |D4  |D5  |D6  |D7  |D8  |D9  |D15 |D14 |D16 |A1  |D10 | 5v |A3  |A2  |
+// +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+//
 // Pin numbers
 
-const int ledShiftLockPin = A2;
-const int ledCapsLockPin = A1;
-const int ledCassPin = A0;
+const int ledShiftLockPin = A3;
+const int ledCapsLockPin = A2;
+const int ledCassPin = A1;
 
 // Column
 const int pa0Pin = 8;
 const int pa1Pin = 9;
-const int pa2Pin = 10;
-const int pa3Pin = 11;
+const int pa2Pin = 15;
+const int pa3Pin = 14;
 
 // Row
 const int pa4Pin = 5;
 const int pa5Pin = 6;
 const int pa6Pin = 7;
 
-const int pa7Pin = 12;
-const int ca2Pin = 13;
+const int pa7Pin = 16;
+const int ca2Pin = 10;
 const int breakPin = 2;
 
 const int clkPin =  3;
@@ -257,8 +265,14 @@ void loop()
   case LEDMODE_REPORT:
     // Get LED state from HID / Serial
 #if OUTPUTTYPE == OT_KEYBOARD
-    // Update LED state from HID
+    // Update LED state from HID on earlier versions
+    // This is a hack to avoid problems with later versions of 
+    // the kayboard library having something different and
+    // just wanting to get this working on the latest version
+    // of the IDE.
+#if ARDUINO < 10606
     LedStatus = Keyboard.getLedStatus();
+#endif
 #elif OUTPUTTYPE == OT_SERIAL
     // Get LED state from serial
     while(Serial.available() > 0){
