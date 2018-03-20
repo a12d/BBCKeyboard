@@ -36,28 +36,27 @@
 // +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
 //
 // Pin numbers
-
-const int ledShiftLockPin = A3;
-const int ledCapsLockPin = A2;
-const int ledCassPin = A1;
+#define ledShiftLockPin A3
+#define ledCapsLockPin A2
+#define ledCassPin A1
 
 // Column
-const int pa0Pin = 8;
-const int pa1Pin = 9;
-const int pa2Pin = 15;
-const int pa3Pin = 14;
+#define pa0Pin 8
+#define pa1Pin 9
+#define pa2Pin 15
+#define pa3Pin 14
 
 // Row
-const int pa4Pin = 5;
-const int pa5Pin = 6;
-const int pa6Pin = 7;
+#define pa4Pin 5
+#define pa5Pin 6
+#define pa6Pin 7
 
-const int pa7Pin = 16;
-const int ca2Pin = 10;
-const int breakPin = 2;
+#define pa7Pin 16
+#define ca2Pin 10
+#define breakPin 2
 
-const int clkPin =  3;
-const int kbEnPin = 4;
+#define clkPin  3
+#define kbEnPin  4
 
 // Keyboard state
 char KeyState[MAXCOL][MAXROW];
