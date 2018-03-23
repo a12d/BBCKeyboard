@@ -3,7 +3,7 @@
 
 #include "BBCKeyboard.h"
 #if ARDUINO >= 10606
-#include <Keyboard.h>
+#include <HID-Project.h>
 #define HID_SendReport(id,data,len) HID().SendReport(id,data,len)
 #endif
 
@@ -271,6 +271,8 @@ void loop()
     // of the IDE.
 #if ARDUINO < 10606
     LedStatus = Keyboard.getLedStatus();
+#else
+    LedStatus = BootKeyboard.getLeds();
 #endif
 #elif OUTPUTTYPE == OT_SERIAL
     // Get LED state from serial
